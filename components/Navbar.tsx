@@ -43,38 +43,16 @@ const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
 
   //close mobile navigation
-  // Ref for the mobile navigation
-  const mobileNavRef = useRef<HTMLDivElement | null>(null);
-
-  // Function to close mobile navigation
-  const closeMobileNav = () => {
-    setIsMobileMenuToggled(false);
-  };
-
-  // Effect to add click event listener to close mobile nav when clicking outside
   useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        mobileNavRef.current &&
-        !mobileNavRef.current.contains(e.target as Node)
-      ) {
-        closeMobileNav();
-      }
+    let handler = (e: MouseEvent) => {
+      setIsMobileMenuToggled(false);
     };
-
-    // Add event listener when mobile navigation is open
-    if (!isNonMobileScreens && isMobileMenuToggled) {
-      document.addEventListener("click", handleOutsideClick);
-    } else {
-      // Remove event listener when mobile navigation is closed
-      document.removeEventListener("click", handleOutsideClick);
-    }
+    document.addEventListener("mousedown", handler);
 
     return () => {
-      // Clean up the event listener
-      document.removeEventListener("click", handleOutsideClick);
+      document.removeEventListener("mousedown", handler);
     };
-  }, [isMobileMenuToggled]);
+  }, []);
 
   return (
     <>
@@ -124,6 +102,7 @@ const Navbar = () => {
                 <DarkMode sx={{ fontSize: "25px", color: dark }} />
               )}
             </IconButton>
+
             <IconButton
               onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
             >
@@ -141,7 +120,6 @@ const Navbar = () => {
             height={"100%"}
             width={isMobile ? "63%" : isTablet ? "55%" : "50%"}
             zIndex={10}
-            ref={mobileNavRef}
           >
             <Box
               display={"flex"}
